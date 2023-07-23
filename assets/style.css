@@ -259,6 +259,7 @@ button[type="submit"]:hover {
     color: #fff;
     border-radius: 4px;
     display: none;
+    z-index: 100;
 }
 
 span.category {

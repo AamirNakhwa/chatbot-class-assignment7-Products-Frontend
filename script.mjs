@@ -58,17 +58,15 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (response.ok) {
-                    debugger
                     return response.json();
                 } else {
                     stopLoading();
                     throw new Error('Error creating product');
                 }
             })
-            .then(createdProduct => {
-                debugger
+            .then(response => {
                 showToast('Product Saved...');
-                console.log('Product Saved:', createdProduct);
+                console.log('Product Saved:', response.data);
 
                 //isUpdate
                 getProducts();
@@ -85,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 stopLoading();
             })
             .catch(error => {
-                debugger
                 showToast('Unable to register new product!');
                 console.error('Error:', error);
                 // Handle any errors that occurred during the request
@@ -174,7 +171,6 @@ function showToast(msg) {
     }, 6000); // Adjust the timeout duration (in milliseconds) as needed
 }
 
-
 function startLoading() {
     var loaderOverlay = document.getElementById('loader-overlay');
     loaderOverlay.style.display = 'flex';
@@ -229,15 +225,14 @@ function getProductCard(product) {
 async function getProducts() {
     try {
         const response = await fetch(`${baseURL}/products`);
-
         if (!response.ok) {
             throw new Error('Failed to fetch products');
         }
-
         container.innerHTML = '';
-        debugger
-        const products = await response.json().data;
-
+        
+        let products = await response.json();
+        products = products.data;
+        
         if (products.length > 0) {
             for (const product of products) {
                 displayProduct(getProductCard(product));
@@ -288,6 +283,7 @@ function deleteProduct(id, cardToRemove) {
         .then(response => {
             if (response.ok) {
                 console.log('Product deleted successfully');
+                showToast('Product deleted successfully');
                 cardToRemove.remove();
             } else {
                 showToast(`Error while getting product: ${response.status}`);
@@ -303,7 +299,6 @@ function deleteProduct(id, cardToRemove) {
         });
 }
 
-
 function getProduct(id) {
     startLoading();
     const apiUrl = `${baseURL}/product/${id}`;
@@ -311,15 +306,14 @@ function getProduct(id) {
     fetch(apiUrl)
         .then(response => {
             if (response.ok) {
-                debugger
-                return response.json().data;
+                return response.json();
             } else {
                 showToast(`Error while fetching product`);
             }
         })
-        .then(product => {
+        .then(response => {
+            const product = response.data;
             console.log('Product:', product);
-
             // Fill the form with the selected product details
             document.getElementById('product-id').value = product.id;
             document.getElementById('product-category').value = product.category;
@@ -340,7 +334,6 @@ function getProduct(id) {
             stopLoading();
         });
 }
-
 
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });

@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (response.ok) {
+                    debugger
                     return response.json();
                 } else {
                     stopLoading();
@@ -65,11 +66,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .then(createdProduct => {
+                debugger
                 showToast('Product Saved...');
                 console.log('Product Saved:', createdProduct);
 
                 //isUpdate
-
                 getProducts();
                 //const newCard = getProductCard(createdProduct);
                 //displayProduct(newCard);
@@ -84,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 stopLoading();
             })
             .catch(error => {
+                debugger
                 showToast('Unable to register new product!');
                 console.error('Error:', error);
                 // Handle any errors that occurred during the request
@@ -233,7 +235,8 @@ async function getProducts() {
         }
 
         container.innerHTML = '';
-        const products = await response.json();
+        debugger
+        const products = await response.json().data;
 
         if (products.length > 0) {
             for (const product of products) {
@@ -308,7 +311,8 @@ function getProduct(id) {
     fetch(apiUrl)
         .then(response => {
             if (response.ok) {
-                return response.json();
+                debugger
+                return response.json().data;
             } else {
                 showToast(`Error while fetching product`);
             }
